@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useInView } from "react-intersection-observer";
+import styled from "@emotion/styled";
 
-function App() {
+const App: React.FC = () => {
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Section ref={ref} inView={inView}>
+      <h2>{`Header inside viewport ${inView}.`}</h2>
+      <p>This is a paragraph.</p>
+    </Section>
   );
+};
+
+interface Props {
+  inView: boolean;
 }
+
+const Section = styled.section<Props>`
+  transition: all 1s ease;
+  transform: ${(props) =>
+    props.inView ? "translateY(0)" : "translateY(50px)"};
+  opacity: ${(props) => (props.inView ? 1 : 0.5)};
+`;
 
 export default App;
